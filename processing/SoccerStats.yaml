@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  description: This API reads statistics for Soccer
+  version: "1.0.0"
+  title: Statistics API
+  contact:
+    email: zali29@my.bcit.ca
+paths:
+  /stats:
+    get:
+     summary: retrieves the event statistics
+     operationId: app.getStats
+     description: Gets Team and Player processed statistics
+     responses:
+        '200':
+          description: Successfully returned a list of team and player statistics
+          content:
+            application/json:
+             schema:
+              type: object
+              items:
+                $ref: '#/components/schemas/Stats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+             schema:
+              type: object
+              properties:
+                message:
+                 type: string
+components:
+  schemas:
+    Stats:
+      required:
+        - num_of_teams
+        - max_team_goals
+        - max_player_age
+        - max_player_goals
+      properties:
+        num_of_teams:
+          type: integer
+          example: 23
+        max_team_goals:
+          type: integer
+          example: 31
+        max_player_age:
+          type: integer
+          example: 37
+        max_player_goals:
+          type: integer
+          example: 19
+      type: object

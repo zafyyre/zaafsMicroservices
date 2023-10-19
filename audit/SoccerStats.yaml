@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  description: This API reads statistics for Soccer
+  version: "1.0.0"
+  title: Soccer Statistics API
+  contact:
+    email: zali29@my.bcit.ca
+paths:
+  /teams:
+    get:
+     summary: retrieves team statistics
+     operationId: app.getTeamStatistics
+     description: Gets team statistics
+     parameters:
+       - name: index
+         in: query
+         description: Gets the Team Statistic at the index in the event store
+         schema:
+           type: integer
+           example: 100
+     responses:
+        '200':
+          description: Successfully returned a list of team statistics
+          content:
+            application/json:
+             schema:
+              type: object
+              items:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+             schema:
+              type: object
+              properties:
+                message:
+                 type: string
+  /players:
+    get:
+     summary: retrieves player statistics
+     operationId: app.getPlayerStatistics
+     description: Gets player statistics
+     parameters:
+       - name: index
+         in: query
+         description: Gets the Player Statistic at the index in the event store
+         schema:
+           type: integer
+           example: 100
+     responses:
+        '200':
+          description: Successfully returned a list of player statistics
+          content:
+            application/json:
+             schema:
+              type: object
+              items:
+                $ref: '#/components/schemas/Player'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+             schema:
+              type: object
+              properties:
+                message:
+                 type: string
+components:
+  schemas:
+    Team:
+      required:
+        - team_id
+        - team_name
+        - goals
+        - wins
+        - losses
+        - number_of_players
+        - trace_id
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          example: 't290f1-6c54s-4b01s'
+        team_name:
+          type: string
+          example: 'Whitecaps FC'
+        goals:
+          type: integer
+          example: 17
+        wins:
+          type: integer
+          example: 0
+        losses:
+          type: integer
+          example: 0
+        number_of_players:
+          type: integer
+          example: 18
+        trace_id:
+          type: string
+          example: 74c7d277-28e6-4e20-a827-4b02b3c95a32
+      type: object
+    Player:
+      required:
+        - player_id
+        - team_id
+        - first_name
+        - last_name
+        - goals
+        - age
+        - jersey_number
+        - trace_id
+      properties:
+        player_id:
+          type: string
+          format: uuid
+          example: 'p431d-4md8-3ka0'
+        team_id:
+          type: string
+          format: uuid
+          example: 't290f1-6c54s-4b01s'
+        first_name:
+          type: string
+          example: 'Cristiano'
+        last_name:
+          type: string
+          example: 'Ronaldo'
+        goals:
+          type: integer
+          example: 19
+        age:
+          type: integer
+          example: 28
+        jersey_number:
+          type: integer
+          example: 7
+        trace_id:
+          type: string
+          example: ee784355-2b26-4899-a840-fd8a4e78f1a3
+      type: object

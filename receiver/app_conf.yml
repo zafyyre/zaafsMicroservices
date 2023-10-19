@@ -1,0 +1,9 @@
+version: 1
+teams:
+  url: http://localhost:8090/teams
+players:
+  url: http://localhost:8090/players
+events:
+  hostname: acit3855-lab6a.westus.cloudapp.azure.com
+  port: 9092
+  topic: events

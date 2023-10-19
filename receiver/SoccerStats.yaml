@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  description: This API reads statistics for Soccer
+  version: "1.0.0"
+  title: Soccer Statistics API
+  contact:
+    email: zali29@my.bcit.ca
+paths:
+  /teams:
+    post:
+      summary: retrieves team statistics
+      operationId: app.teamStatistics
+      description: Shows team statistics
+      responses:
+        '201':
+          description: 'Item Successfully Created'
+        '400':
+          description: 'Invalid Input, Try Again!'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+        description: Shows team statistics
+  /players:
+    post:
+      summary: retrieves player statistics
+      operationId: app.playerStatistics
+      description: Shows player statistics
+      responses:
+        '201':
+          description: 'Item Successfully Created'
+        '400':
+          description: 'Invalid Input, Try Again!'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+        description: Shows player statistics
+components:
+  schemas:
+    Team:
+      required:
+        - team_id
+        - team_name
+        - goals
+        - wins
+        - losses
+        - number_of_players
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          example: 't290f1-6c54s-4b01s'
+        team_name:
+          type: string
+          example: 'Whitecaps FC'
+        goals:
+          type: integer
+          example: 17
+        wins:
+          type: integer
+          example: 0
+        losses:
+          type: integer
+          example: 0
+        number_of_players:
+          type: integer
+          example: 18
+      type: object
+    Player:
+      required:
+        - player_id
+        - team_id
+        - first_name
+        - last_name
+        - goals
+        - age
+        - jersey_number
+      properties:
+        player_id:
+          type: string
+          format: uuid
+          example: 'p431d-4md8-3ka0'
+        team_id:
+          type: string
+          format: uuid
+          example: 't290f1-6c54s-4b01s'
+        first_name:
+          type: string
+          example: 'Cristiano'
+        last_name:
+          type: string
+          example: 'Ronaldo'
+        goals:
+          type: integer
+          example: 19
+        age:
+          type: integer
+          example: 28
+        jersey_number:
+          type: integer
+          example: 7
+      type: object

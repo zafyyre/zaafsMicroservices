@@ -1,0 +1,11 @@
+version: 1
+datastore:
+  user: ${MYSQL_USERNAME}
+  password: ${MYSQL_PASSWORD}
+  hostname: acit3855-lab6a.westus.cloudapp.azure.com
+  port: 3306
+  db: events
+events:
+  hostname: acit3855-lab6a.westus.cloudapp.azure.com
+  port: 9092
+  topic: events
