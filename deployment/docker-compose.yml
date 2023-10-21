@@ -12,13 +12,13 @@ services:
     command: [start-kafka.sh]
     ports:
       - "9092:9092"
-    hostname: acit3855-lab6a.westus.cloudapp.azure.com
+    hostname: kafka
     environment:
       KAFKA_CREATE_TOPICS: "events:1:1" # topic:partition:replicas
-      KAFKA_ADVERTISED_HOST_NAME: acit3855-lab6a.westus.cloudapp.azure.com # docker-machine ip
+      KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip
       KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://acit3855-lab6a.westus.cloudapp.azure.com:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
@@ -27,11 +27,11 @@ services:
     - "zookeeper"
 
   db:
-    hostname: acit3855-lab6a.westus.cloudapp.azure.com
+    hostname: mysql
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'events'
+      MYSQL_DATABASE: events
       # So you don't have to use root, but you can if you like
       MYSQL_USER: user
       # You can use whatever password you like

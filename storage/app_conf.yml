@@ -2,10 +2,10 @@ version: 1
 datastore:
   user: root
   password: natasha25
-  hostname: acit3855-lab6a.westus.cloudapp.azure.com
+  hostname: mysql
   port: 3306
   db: events
 events:
-  hostname: acit3855-lab6a.westus.cloudapp.azure.com
+  hostname: kafka
   port: 9092
   topic: events
