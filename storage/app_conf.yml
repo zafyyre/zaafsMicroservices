@@ -1,7 +1,7 @@
 version: 1
 datastore:
-  user: ${MYSQL_USERNAME}
-  password: ${MYSQL_PASSWORD}
+  user: root
+  password: natasha25
   hostname: acit3855-lab6a.westus.cloudapp.azure.com
   port: 3306
   db: events

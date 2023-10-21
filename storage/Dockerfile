@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-LABEL maintaner="zali29@my.bcit.ca"
+LABEL maintainer="zali29@my.bcit.ca"
 
 RUN apt-get update -y && \
     apt-get install -y python3 python3-pip
@@ -13,6 +13,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-ENTRYPOINT [ "python3" ]
-
-CMD ["create_tables_mysql.py"], [ "app.py"]
+# Use a single ENTRYPOINT and CMD instruction
+ENTRYPOINT ["python3"]
+CMD ["create_tables_mysql.py", "app.py"]
