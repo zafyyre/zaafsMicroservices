@@ -7,7 +7,8 @@ with open('app_conf.yml', 'r') as f:
 # Establish a connection to MySQL server
 db_conn = mysql.connector.connect(host=f'{app_config["datastore"]["hostname"]}', 
                                   user=f'{app_config["datastore"]["user"]}', 
-                                  password=f'{app_config["datastore"]["password"]}')
+                                  password=f'{app_config["datastore"]["password"]}',
+                                  port=f'{app_config["datastore"]["port"]}')
 
 # Create a cursor object to execute SQL queries
 db_cursor = db_conn.cursor()
