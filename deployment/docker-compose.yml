@@ -37,9 +37,9 @@ services:
       MYSQL_PASSWORD: natasha25
       MYSQL_ROOT_PASSWORD: natasha25
     ports:
-      - 3306:3306
+      - '3306:3306'
     expose:
-      - 3306
+      - '3306'
     volumes:
       - my-db:/var/lib/mysql
 
@@ -63,8 +63,8 @@ services:
     ports:
       - 8090:8090
     depends_on:
-      - "kafka"
-      - "db"
+      - kafka
+      - db
 
   processing:
     build:
