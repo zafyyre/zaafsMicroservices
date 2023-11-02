@@ -31,7 +31,8 @@ DB_ENGINE = create_engine(f'mysql+pymysql://'
                           f'{app_config["datastore"]["hostname"]}:'
                           f'{app_config["datastore"]["port"]}/'
                           f'{app_config["datastore"]["db"]}')
-Base.metadata.bind = DB_ENGINE
+Base.metadata.create_all(bind=DB_ENGINE)
+# Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 
 

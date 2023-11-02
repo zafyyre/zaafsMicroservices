@@ -17,9 +17,9 @@ class Player(Base):
     goals = Column(Integer, nullable=False, default=0)
     age = Column(Integer, nullable=False)
     jersey_number = Column(Integer, nullable=False)
-    date_created = Column(String, nullable=False)
-    trace_id = Column(String, nullable=False)
-
+    date_created = Column(String(250), nullable=False)
+    trace_id = Column(String(250), nullable=False)
+    
     # Constructor, whenever we call this class and pass different values
     # This will automatically assign the passed in values to what is in this constructor
     def __init__(self, player_id, team_id, first_name, last_name, goals, age, jersey_number, trace_id):

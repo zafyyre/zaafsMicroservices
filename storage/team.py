@@ -16,8 +16,8 @@ class Team(Base):
     wins = Column(Integer, nullable=False, default=0)
     losses = Column(Integer, nullable=False, default=0)
     number_of_players = Column(Integer, nullable=False, default=0)
-    date_created = Column(String, nullable=False)
-    trace_id = Column(String, nullable=False)
+    date_created = Column(String(250), nullable=False)
+    trace_id = Column(String(250), nullable=False)
 
     # Constructor, whenever we call this class and pass different values
     # This will automatically assign the passed in values to what is in this constructor
