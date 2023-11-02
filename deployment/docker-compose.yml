@@ -90,7 +90,12 @@ services:
       - kafka
 
   dashboard:
+    build:
+      context: ../dashboard-ui
+      dockerfile: Dockerfile
+    container_name: "dashboard"
     image: dashboard
+    restart: always
     ports:
       - 3000:3000
     depends_on:
