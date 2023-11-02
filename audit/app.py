@@ -5,6 +5,7 @@ import logging, logging.config
 
 from connexion import NoContent
 from pykafka import KafkaClient
+from flask_cors import CORS, cross_origin
 
 
 with open('app_conf.yml', 'r') as f:
@@ -81,3 +82,5 @@ app.add_api("SoccerStats.yaml", strict_validation=True, validate_responses=True)
 
 if __name__ == '__main__':
     app.run(port=8110)
+    CORS(app.app)
+    app.app.config['CORS_HEADERS'] = 'Content-Type'
