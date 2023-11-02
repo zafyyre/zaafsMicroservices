@@ -131,11 +131,11 @@ def init_scheduler():
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
+CORS(app.app)
+app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api("SoccerStats.yaml", strict_validation=True, validate_responses=True)
 
 
 if __name__ == '__main__':
     init_scheduler()
     app.run(port=8100, use_reloader=False)
-    CORS(app.app)
-    app.app.config['CORS_HEADERS'] = 'Content-Type'
