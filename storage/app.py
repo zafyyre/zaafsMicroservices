@@ -3,6 +3,7 @@ import yaml
 import logging, logging.config
 import datetime
 import json
+import time
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -12,6 +13,8 @@ from player import Player
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
+from sqlalchemy import and_
+from pykafka.exceptions import KafkaException
 
 
 with open('app_conf.yml', 'r') as f:
@@ -55,13 +58,19 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 #     session.close()
 
 
-def getTeamStatistics(timestamp):
+def getTeamStatistics(timestamp, end_timestamp):
 
     results_list = []
     
     session = DB_SESSION()
     timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    teamStatistics = session.query(Team).filter(Team.date_created >= timestamp_datetime)
+    # Added an end timestamp so we can specify a range for querying data from the database
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    # Query the database for records where the creation date is within the specified range
+    teamStatistics = session.query(Team).filter(
+        and_(Team.date_created >= timestamp_datetime,
+             Team.date_created < end_timestamp_datetime)
+    )
 
     for stat in teamStatistics:
         results_list.append(stat.to_dict())
@@ -92,13 +101,19 @@ def getTeamStatistics(timestamp):
 #     session.close()
 
 
-def getPlayerStatistics(timestamp):
+def getPlayerStatistics(timestamp, end_timestamp):
 
     results_list = []
     
     session = DB_SESSION()
     timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
-    playerStatistics = session.query(Player).filter(Player.date_created >= timestamp_datetime)
+    # Added an end timestamp so we can specify a range for querying data from the database
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%dT%H:%M:%SZ")
+    # Query the database for records where the creation date is within the specified range
+    playerStatistics = session.query(Player).filter(
+        and_(Player.date_created >= timestamp_datetime,
+             Player.date_created < end_timestamp_datetime)
+    )
 
     for stat in playerStatistics:
         results_list.append(stat.to_dict())
@@ -109,11 +124,42 @@ def getPlayerStatistics(timestamp):
     return results_list, 200
 
 def process_messages():
-    """ Process event messages """
+    """ Process event messages with retry logic for Kafka connection """
+    # Configure the hostname from the application configuration
     hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
-    client = KafkaClient(hosts=hostname)
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
+    # Set the maximum number of retries for connecting to Kafka
+    max_retries = app_config["kafka"]["max_retries"]
+    # Set the wait time between retry attempts
+    retry_wait = app_config["kafka"]["retry_wait"]
+    # Initialize the attempt counter
+    attempt = 0
 
+    # Begin a loop that will try to connect to Kafka up to the max_retries limit
+    while attempt < max_retries:
+        try:
+            # Log the attempt number
+            logger.info(f"Attempt {attempt+1} of {max_retries}: Connecting to Kafka at {hostname}")
+            # Attempt to create a Kafka client
+            client = KafkaClient(hosts=hostname)
+            # Attempt to access the Kafka topic
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
+            # If successful, log the success and break out of the loop
+            logger.info("Successfully connected to Kafka")
+            break
+        except KafkaException as e:
+            # If a KafkaException occurs, log the failure
+            logger.error(f"Failed to connect to Kafka: {e}")
+            # Increment the attempt counter
+            attempt += 1
+            # If we have not reached the max_retries limit, wait for a bit and then continue the loop
+            if attempt < max_retries:
+                logger.info(f"Retrying in {retry_wait} seconds...")
+                time.sleep(retry_wait)
+            else:
+                # If we've reached the max_retries limit, log an error and exit the function
+                logger.error("Maximum retry attempts reached, could not connect to Kafka.")
+                return
+            
     # Create a consumer on a consumer group that reads only new, uncommitted messages.
     consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
 

@@ -6,6 +6,9 @@ services:
     - "2181"
     hostname: zookeeper
     container_name: "zookeeper"
+    # Mapping the volume from the host to the container for Zookeeper data persistence
+    volumes:
+      - /home/acit3855zaaf/zookeeper/data:/opt/zookeeper-3.4.13/data
 
   kafka:
     image: wurstmeister/kafka
@@ -22,8 +25,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LOG_DIRS: /kafka/kafka-logs # Sets the directory where Kafka will store log files
+      KAFKA_BROKER_ID: 1 # Assigns a unique identifier to the Kafka broker
+    # Mapping Docker socket and Kafka logs directory for Kafka data persistence
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock # Allows the container to communicate with the Docker daemon
+    - /home/acit3855zaaf/kafka:/kafka/kafka-logs # Persists Kafka logs across container restarts
     depends_on:
     - "zookeeper"
 

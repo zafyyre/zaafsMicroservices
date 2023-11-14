@@ -53,10 +53,14 @@ def populate_stats():
     stats = get_latest_processing_stats()
 
     last_updated = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+
     if "last_updated" in stats:
         last_updated = stats["last_updated"]
+        current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    response = requests.get(app_config["eventstore"]["url"] + "/teams?timestamp=" + last_updated)
+    # Get new events using the last updated time and the current time
+    response = requests.get(app_config["eventstore"]["url"] + "/teams?timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
 
     if response.status_code == 200:
         if "num_of_teams" in stats.keys():
@@ -75,7 +79,8 @@ def populate_stats():
 
         logger.info("Processed %d Team statistics" % len(response.json()))
 
-    response = requests.get(app_config["eventstore"]["url"] + "/players?timestamp=" + last_updated)
+    # Get new events using the last updated time and the current time
+    response = requests.get(app_config["eventstore"]["url"] + "/players?timestamp=" + last_updated + "&end_timestamp=" + current_timestamp)
 
     if response.status_code == 200:
         for event in response.json():

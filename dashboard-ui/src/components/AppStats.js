@@ -39,7 +39,7 @@ export default function AppStats() {
 							<th>Players</th>
 						</tr>
 						<tr>
-							<td># of Teams: {stats['num_of_teams']}</td>
+							<td>Number of Teams: {stats['num_of_teams']}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Max Team Goals: {stats['max_team_goals']}</td>

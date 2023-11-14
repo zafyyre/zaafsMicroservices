@@ -19,6 +19,13 @@ paths:
            type: string
            format: date-time
            example: 2016-08-29T09:12:33.001Z
+       - name: end_timestamp
+         in: query
+         description: Limits the number of items on a page
+         schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
      responses:
         '200':
           description: Successfully returned a list of team statistics
@@ -50,6 +57,13 @@ paths:
            type: string
            format: date-time
            example: 2016-08-29T09:12:33.001Z
+       - name: end_timestamp
+         in: query
+         description: Limits the number of items on a page
+         schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
      responses:
         '200':
           description: Successfully returned a list of player statistics
