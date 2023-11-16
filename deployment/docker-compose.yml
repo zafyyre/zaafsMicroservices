@@ -59,6 +59,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/acit3855zaaf/config/receiver:/config
+      - /home/acit3855zaaf/logs:/logs
     restart: always
     ports:
       - 8080:8080
@@ -74,6 +75,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/acit3855zaaf/config/storage:/config
+      - /home/acit3855zaaf/logs:/logs
     restart: always
     ports:
       - 8090:8090
@@ -90,6 +92,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/acit3855zaaf/config/processing:/config
+      - /home/acit3855zaaf/logs:/logs
     restart: always
     ports:
       - 8100:8100
@@ -106,6 +109,7 @@ services:
       - TARGET_ENV=test
     volumes:
       - /home/acit3855zaaf/config/audit_log:/config
+      - /home/acit3855zaaf/logs:/logs
     restart: always
     ports:
       - 8110:8110
