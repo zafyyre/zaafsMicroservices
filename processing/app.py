@@ -49,6 +49,8 @@ def getStats():
             stats["max_player_age"] = all_stats["max_player_age"]
         if "max_player_goals" in all_stats:
             stats["max_player_goals"] = all_stats["max_player_goals"]
+        if "last_updated" in all_stats:
+            stats["last_updated"] = all_stats["last_updated"]
 
         logger.info("Found valid stats")
         logger.debug(stats)
