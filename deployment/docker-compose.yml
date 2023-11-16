@@ -93,6 +93,7 @@ services:
     volumes:
       - /home/acit3855zaaf/config/processing:/config
       - /home/acit3855zaaf/logs:/logs
+      - processing-db:/data
     restart: always
     ports:
       - 8100:8100
@@ -131,3 +132,4 @@ services:
 
 volumes:
   my-db:
+  processing-db:
