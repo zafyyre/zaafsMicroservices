@@ -4,4 +4,4 @@ datastore:
 scheduler:
   period_sec: 5
 eventstore:
-  url: acit3855-lab6a.westus.cloudapp.azure.com/storage
+  url: http://acit3855-lab6a.westus.cloudapp.azure.com/storage
