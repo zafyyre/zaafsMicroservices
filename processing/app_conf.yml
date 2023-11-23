@@ -4,4 +4,4 @@ datastore:
 scheduler:
   period_sec: 5
 eventstore:
-  url: /home/acit3855/config/processing
+  url: http://localhost:8090
