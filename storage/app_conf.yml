@@ -2,7 +2,7 @@ version: 1
 datastore:
   user: root
   password: natasha25
-  hostname: db
+  hostname: acit3855-lab6a.westus.cloudapp.azure.com
   port: 3306
   db: events
 events:
