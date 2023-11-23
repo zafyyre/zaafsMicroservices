@@ -135,7 +135,7 @@ services:
       - "3000"
     depends_on:
       - processing
-      - audit
+      - audit_log
     networks:
       - api.network
 
