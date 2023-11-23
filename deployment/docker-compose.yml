@@ -106,11 +106,11 @@ services:
     networks:
       - api.network
 
-  audit:
+  audit_log:
     build:
-     context: ../audit
+     context: ../audit_log
      dockerfile: Dockerfile
-    container_name: "audit"
+    container_name: "audit_log"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -124,11 +124,11 @@ services:
     networks:
       - api.network
 
-  dashboard:
+  dashboard-ui:
     build:
       context: ../dashboard-ui
       dockerfile: Dockerfile
-    container_name: "dashboard"
+    container_name: "dashboard-ui"
     image: dashboard
     restart: always
     ports:
@@ -149,8 +149,8 @@ services:
       - "receiver"
       - "storage"
       - "processing"
-      - "audit"
-      - "dashboard"
+      - "audit_log"
+      - "dashboard-ui"
     # Connects the port 80 of the nginx container to localhost:80 or localhost
     ports:
       - "80:80"
