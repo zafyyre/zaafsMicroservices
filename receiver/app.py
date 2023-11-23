@@ -112,7 +112,7 @@ def playerStatistics(body):
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
-app.add_api("SoccerStats.yaml", strict_validation=True, validate_responses=True)
+app.add_api("SoccerStats.yaml", strict_validation=True, validate_responses=True, base_path="/receiver")
 
 
 if __name__ == '__main__':
