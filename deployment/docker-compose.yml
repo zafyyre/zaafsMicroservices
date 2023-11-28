@@ -54,7 +54,7 @@ services:
     build:
      context: ../receiver
      dockerfile: Dockerfile
-    container_name: "receiver"
+    # container_name: "receiver"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -72,7 +72,7 @@ services:
     build:
      context: ../storage
      dockerfile: Dockerfile
-    container_name: "storage"
+    # container_name: "storage"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -91,7 +91,7 @@ services:
     build:
      context: ../processing
      dockerfile: Dockerfile
-    container_name: "processing"
+    # container_name: "processing"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -110,7 +110,7 @@ services:
     build:
      context: ../audit_log
      dockerfile: Dockerfile
-    container_name: "audit_log"
+    # container_name: "audit_log"
     environment:
       - TARGET_ENV=test
     volumes:
@@ -128,7 +128,7 @@ services:
     build:
       context: ../dashboard-ui
       dockerfile: Dockerfile
-    container_name: "dashboard-ui"
+    # container_name: "dashboard-ui"
     image: dashboard
     restart: always
     ports:
