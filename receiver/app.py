@@ -50,7 +50,6 @@ while attempt < max_retries:
         client = KafkaClient(hosts=hostname)
         # Attempt to access the Kafka topic and producer
         topic = client.topics[str.encode(app_config["events"]["topic"])]
-        kafka_producer = topic.get_sync_producer()
         # If successful, log the success and break out of the loop
         logger.info("Successfully connected to Kafka")
         break
@@ -80,7 +79,7 @@ def teamStatistics(body):
         "payload": body
     }
     msg_str = json.dumps(msg)
-    
+    kafka_producer = topic.get_sync_producer()
     kafka_producer.produce(msg_str.encode('utf-8'))
     
     logger.info("Produced event Team message with Team ID: {} and Trace ID: {}".format(body["team_id"], body["trace_id"]))
@@ -102,6 +101,7 @@ def playerStatistics(body):
     msg_str = json.dumps(msg)
     
     # Produce the Kafka message
+    kafka_producer = topic.get_sync_producer()
     kafka_producer.produce(msg_str.encode('utf-8'))
     
     logger.info("Produced event Player message with Player ID: {} and Trace ID: {}".format(body["player_id"], body["trace_id"]))
