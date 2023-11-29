@@ -28,12 +28,15 @@ logger = logging.getLogger('basicLogger')
 logger.info("App Conf File: %s" % app_conf_file)
 logger.info("Log Conf File: %s" % log_conf_file)
 
-kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
-kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
-kafka_producer = kafka_topic.get_sync_producer()
+# kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
+# kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
+# kafka_producer = kafka_topic.get_sync_producer()
 
 
 def getTeamStatistics(index):
+
+    kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
+    kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
 
     consumer = kafka_topic.get_simple_consumer(reset_offset_on_start=True, 
                                                consumer_timeout_ms=1000)
@@ -61,6 +64,9 @@ def getTeamStatistics(index):
 
 
 def getPlayerStatistics(index):
+
+    kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
+    kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
 
     consumer = kafka_topic.get_simple_consumer(reset_offset_on_start=True,
                                                consumer_timeout_ms=1000)
