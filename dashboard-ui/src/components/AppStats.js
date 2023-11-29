@@ -8,7 +8,7 @@ export default function AppStats() {
 
 	const getStats = () => {
 	
-        fetch(`http://acit3855-lab6a.westus.cloudapp.azure.com/stats`)
+        fetch(`http://processing:8100/stats`)
             .then(res => res.json())
             .then((result)=>{
 				console.log("Received Stats")
