@@ -18,7 +18,7 @@ services:
     hostname: kafka
     container_name: kafka
     environment:
-      KAFKA_CREATE_TOPICS: "events:1:1" # topic:partition:replicas
+      KAFKA_CREATE_TOPICS: "events:2:1" # topic:partition:replicas
       KAFKA_ADVERTISED_HOST_NAME: acit3855-lab6a.westus.cloudapp.azure.com # docker-machine ip
       KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
