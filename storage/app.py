@@ -5,6 +5,7 @@ import datetime
 import json
 import time
 import os
+import zookeeper
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -173,7 +174,7 @@ def process_messages():
                 return
             
     # Create a consumer on a consumer group that reads only new, uncommitted messages.
-    consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
+    consumer = topic.get_balanced_consumer(consumer_group='event_group', zookeeper_connect=zookeeper, reset_offset_on_start=False, auto_commit_enable=True, auto_commit_interval_ms=100)
 
     # This is a blocking loop that waits for new messages
     for msg in consumer:
