@@ -4,31 +4,33 @@ pipeline {
     stages {
         stage('Lint') {
             steps {
-                sh 'pylint --fail-under 5 audit_log/*.py'
+                sshagent(['lab6a']) {
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "pylint --fail-under 5 audit_log/*.py"'
+                }
             }
         }
         stage('Security') {
             steps {
-                withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-                    sh "docker login -u zafyyre -p '$TOKEN' docker.io"
-                    sh "docker build -t audit_log:latest ."
+                sshagent(['lab6a']) {
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker login -u zafyyre -p \'$TOKEN\' docker.io"'
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker build -t audit_log:latest ."'
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "trivy image --exit-code 1 --severity HIGH,CRITICAL audit_log:latest"'
                 }
-                sh 'trivy image --exit-code 1 --severity HIGH,CRITICAL audit_log:latest'
             }
         }
         stage('Package') {
             steps {
-                withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-                    sh "docker login -u zafyyre -p '$TOKEN' docker.io"
-                    sh "docker build -t audit_log:latest ."
-                    sh "docker push zafyyre/audit_log:latest"
+                sshagent(['lab6a']) {
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker login -u zafyyre -p \'$TOKEN\' docker.io"'
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker build -t audit_log:latest ."'
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker push zafyyre/audit_log:latest"'
                 }
             }
         }
         stage('Deploy') {
             steps {
                 sshagent(['lab6a']) {
-                    sh 'ssh -i acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker pull zafyyre/audit_log:latest && docker-compose -f deployment/docker-compose.yml up -d"'
+                    sh 'ssh acitzaaf3855@acit3855-lab6a.westus.cloudapp.azure.com "docker pull zafyyre/audit_log:latest && docker-compose -f deployment/docker-compose.yml up -d"'
                 }
             }
         }
