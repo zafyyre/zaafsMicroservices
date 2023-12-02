@@ -51,10 +51,11 @@ services:
       - my-db:/var/lib/mysql
 
   receiver:
-    build:
-     context: ../receiver
-     dockerfile: Dockerfile
+    # build:
+    #  context: ../receiver
+    #  dockerfile: Dockerfile
     # container_name: "receiver"
+    image: zafyyre/receiver:latest
     environment:
       - TARGET_ENV=test
     volumes:
@@ -69,10 +70,11 @@ services:
       - api.network
 
   storage:
-    build:
-     context: ../storage
-     dockerfile: Dockerfile
+    # build:
+    #  context: ../storage
+    #  dockerfile: Dockerfile
     # container_name: "storage"
+    image: zafyyre/storage:latest
     environment:
       - TARGET_ENV=test
     volumes:
@@ -88,10 +90,11 @@ services:
       - api.network
 
   processing:
-    build:
-     context: ../processing
-     dockerfile: Dockerfile
+    # build:
+    #  context: ../processing
+    #  dockerfile: Dockerfile
     # container_name: "processing"
+    image: zafyyre/processing:latest
     environment:
       - TARGET_ENV=test
     volumes:
@@ -107,10 +110,11 @@ services:
       - api.network
 
   audit_log:
-    build:
-     context: ../audit_log
-     dockerfile: Dockerfile
+    # build:
+    #  context: ../audit_log
+    #  dockerfile: Dockerfile
     # container_name: "audit_log"
+    image: zafyyre/audit_log:latest
     environment:
       - TARGET_ENV=test
     volumes:

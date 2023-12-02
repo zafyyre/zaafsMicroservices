@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    stage('Deploy') {
+        steps {
+            sshagent(['lab6a']) {
+                sh '''
+                    ssh -o StrictHostKeyChecking=no acit3855zaaf@acit3855-lab6a.westus.cloudapp.azure.com
+                    docker login -u zafyyre -p '$TOKEN' docker.io
+                    docker pull zafyyre/audit_log:latest
+                    docker pull zafyyre/processing:latest
+                    docker pull zafyyre/receiver:latest
+                    docker pull zafyyre/storage:latest
+                    docker-compose -f zaafsMicroservices/deployment/docker-compose.yml up -d
+                '''
+            }
+        }
+    }
+}
