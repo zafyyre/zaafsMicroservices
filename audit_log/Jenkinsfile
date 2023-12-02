@@ -13,6 +13,7 @@ pipeline {
             steps {
                 sh 'pip install -r audit_log/requirements.txt --break-system-packages'
                 sh 'pip install --upgrade flask --break-system-packages'
+                sh 'pip install bandit --break-system-packages'
                 sh 'bandit -r audit_log/ -lll -iii'
             }
         }
