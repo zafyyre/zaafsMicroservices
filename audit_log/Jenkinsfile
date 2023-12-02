@@ -11,11 +11,7 @@ pipeline {
 
         stage('Security') {
             steps {
-                withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-                    sh "docker login -u zafyyre -p '$TOKEN' docker.io"
-                    sh "docker build -t audit_log:latest audit_log/."
-                    sh "trivy image --exit-code 1 --severity HIGH,CRITICAL audit_log:latest"
-                }
+                sh 'bandit -r audit_log/ -lll -iii'
             }
         }
 
