@@ -1,16 +1,16 @@
-import connexion
 import datetime
 import json
-import yaml
-import logging, logging.config
-import uuid
-import time
+import logging
+import logging.config
 import os
+import time
+import uuid
+import yaml
 
+import connexion
 from connexion import NoContent
 from pykafka import KafkaClient
 from pykafka.exceptions import KafkaException
-
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
