@@ -10,7 +10,7 @@ pipeline {
                         docker pull zafyyre/processing:latest
                         docker pull zafyyre/receiver:latest
                         docker pull zafyyre/storage:latest
-                        docker-compose -f zaafsMicroservices/deployment/docker-compose.yml up -d
+                        ls
                     '''
                 }
             }
