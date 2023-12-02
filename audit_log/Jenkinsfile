@@ -3,12 +3,6 @@ pipeline {
 
     // This stage is for checking out the code from your GitHub repository
     stages {
-        stage('Checkout') {
-            steps {
-                // Use the credentials ID for the SSH key
-                sh 'git clone https://github.com/zafyyre/zaafsMicroservices.git'
-            }
-        }
         stage('Lint') {
             steps {
                 sh "pylint --fail-under 5 audit_log/*.py"
