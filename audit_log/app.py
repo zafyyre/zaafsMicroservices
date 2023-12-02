@@ -27,15 +27,15 @@ logger = logging.getLogger('basicLogger')
 logger.info("App Conf File: %s" % APP_CONF_FILE)
 logger.info("Log Conf File: %s" % LOG_CONF_FILE)
 
+
 def getTeamStatistics(index):
 
-    kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
-
+    kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
     kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
 
-    consumer = kafka_topic.get_simple_consumer(reset_offset_on_start=True, 
+    consumer = kafka_topic.get_simple_consumer(reset_offset_on_start=True,
                                                consumer_timeout_ms=1000)
-    
+
     logger.info(f"Retrieving Team Statistic at index {index}")
 
     event_messages = []
@@ -44,11 +44,11 @@ def getTeamStatistics(index):
         for msg in consumer:
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
-            
-            
+
+
             if msg.get('type') == 'Team':
-                event_messages.append(msg) 
-            
+                event_messages.append(msg)
+
             if len(event_messages) > index:
                 return event_messages[index], 200
     except:
@@ -60,8 +60,7 @@ def getTeamStatistics(index):
 
 def getPlayerStatistics(index):
 
-    kafka_client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
-
+    kafka_client = KafkaClient(hosts='%s:%d' % (app_config["events"]["hostname"], app_config["events"]["port"]))
     kafka_topic = kafka_client.topics[str.encode(app_config["events"]["topic"])]
 
     consumer = kafka_topic.get_simple_consumer(reset_offset_on_start=True,
@@ -75,11 +74,11 @@ def getPlayerStatistics(index):
         for msg in consumer:
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
-            
-            
+
+
             if msg.get('type') == 'Player':
-                event_messages.append(msg) 
-            
+                event_messages.append(msg)
+
             if len(event_messages) > index:
                 return event_messages[index], 200
     except:
