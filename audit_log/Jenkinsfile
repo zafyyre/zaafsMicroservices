@@ -11,6 +11,7 @@ pipeline {
 
         stage('Security') {
             steps {
+                sh 'pip install bandit'
                 sh 'bandit -r audit_log/ -lll -iii'
             }
         }
