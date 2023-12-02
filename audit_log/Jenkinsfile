@@ -25,11 +25,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(['ACIT-3855-Lab6A_key']) {
+                sshagent(['lab6a']) {
+                    sh 'ssh acit3855@acit3855-lab6a.westus.cloudapp.azure.com'
                     withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
                         sh "docker login -u zafyyre -p '$TOKEN' docker.io"
                         sh "docker pull zafyyre/audit_log:latest"
-                        // sh "docker-compose -f deployment/docker-compose.yml up -d"
+                        sh "docker-compose -f deployment/docker-compose.yml up -d"
                     }
                 }
             }
