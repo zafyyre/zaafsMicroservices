@@ -72,7 +72,7 @@ def teamStatistics(body):
     body['trace_id'] = str(trace_id)
 
     logger.info("Received Event Team Request with Team ID: {} and Trace ID: {}".format(body["team_id"], body["trace_id"]))
-    
+
     msg = {
         "type": "Team",
         "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -81,7 +81,7 @@ def teamStatistics(body):
     msg_str = json.dumps(msg)
     kafka_producer = topic.get_sync_producer()
     kafka_producer.produce(msg_str.encode('utf-8'))
-    
+
     logger.info("Produced event Team message with Team ID: {} and Trace ID: {}".format(body["team_id"], body["trace_id"]))
 
     return NoContent, 201
@@ -91,7 +91,7 @@ def playerStatistics(body):
     body['trace_id'] = str(trace_id)
 
     logger.info("Received Event Player Request with Player ID: {} and Trace ID: {}".format(body["player_id"], body["trace_id"]))
-    
+
     # Create the Kafka message
     msg = {
         "type": "Player",
@@ -99,11 +99,11 @@ def playerStatistics(body):
         "payload": body  # Use the entire request body as the payload
     }
     msg_str = json.dumps(msg)
-    
+
     # Produce the Kafka message
     kafka_producer = topic.get_sync_producer()
     kafka_producer.produce(msg_str.encode('utf-8'))
-    
+
     logger.info("Produced event Player message with Player ID: {} and Trace ID: {}".format(body["player_id"], body["trace_id"]))
 
     # Respond with a status code of 201 (Created)
