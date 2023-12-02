@@ -11,7 +11,7 @@ pipeline {
 
         stage('Security') {
             steps {
-                sh 'pip3 install bandit'
+                sh 'pip3 install bandit --break-system-packages'
                 sh 'bandit -r audit_log/ -lll -iii'
             }
         }
