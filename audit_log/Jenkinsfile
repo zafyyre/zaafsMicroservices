@@ -11,7 +11,8 @@ pipeline {
 
         stage('Security') {
             steps {
-                sh 'pip3 install bandit --break-system-packages'
+                sh 'pip install -r requirements.txt --break-system-packages'
+                sh 'pip install --upgrade flask --break-system-packages'
                 sh 'bandit -r audit_log/ -lll -iii'
             }
         }
