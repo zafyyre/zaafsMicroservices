@@ -31,8 +31,8 @@ with open(LOG_CONF_FILE, 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
-logger.info("App Conf File: %s" % APP_CONF_FILE)
-logger.info("Log Conf File: %s" % LOG_CONF_FILE)
+logger.info(f"App Conf File: {APP_CONF_FILE}")
+logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
 
 def getTeamStatistics(index):
