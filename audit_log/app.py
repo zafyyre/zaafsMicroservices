@@ -1,3 +1,10 @@
+"""
+This module integrates various components to set up and run a Flask application
+with Kafka integration for processing and retrieving sports statistics. It includes
+configuration loading, Kafka client setup, API initialization with Connexion, and
+Flask CORS settings for cross-origin resource sharing. The module also contains
+specific functions to interact with Kafka for fetching team and player statistics.
+"""
 import os
 import json
 import logging.config
