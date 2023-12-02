@@ -1,7 +1,5 @@
 pipeline {
     agent any
-
-    // This stage is for checking out the code from your GitHub repository
     stages {
         stage('Lint') {
             steps {
@@ -11,9 +9,6 @@ pipeline {
 
         stage('Security') {
             steps {
-                sh 'pip install -r audit_log/requirements.txt --break-system-packages'
-                sh 'pip install --upgrade flask --break-system-packages'
-                sh 'pip install bandit --break-system-packages'
                 sh 'bandit -r audit_log/ -lll -iii'
             }
         }
@@ -23,7 +18,8 @@ pipeline {
                 withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
                     sh "docker login -u zafyyre -p '$TOKEN' docker.io"
                     sh "docker build -t audit_log:latest audit_log/."
-                    sh "docker push zafyyre/audit_log:latest"
+                    sh "docker build -t audit_log:latest --tag zafyyre/audit_log:latest ."
+                    sh "docker push /audit_log:latest"
                 }
             }
         }
