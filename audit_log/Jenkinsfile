@@ -6,7 +6,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Use the credentials ID for the SSH key
-                sh 'git clone https://github.com:zafyyre/zaafsMicroservices.git'
+                sh 'git clone https://github.com/zafyyre/zaafsMicroservices.git'
             }
         }
         stage('Lint') {
