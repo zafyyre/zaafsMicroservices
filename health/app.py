@@ -32,7 +32,7 @@ logger = logging.getLogger('basicLogger')
 logger.info(f"App Conf File: {APP_CONF_FILE}")
 logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
-def check_health():
+def getHealth():
     """ Periodically checks the health of services and updates their status """
     logger.info("Starting Health Check")
     health_stats = get_latest_health_stats()
@@ -77,7 +77,7 @@ def health():
 
 def init_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    sched.add_job(check_health, 'interval', seconds=app_config['health_check']['interval'])
+    sched.add_job(getHealth, 'interval', seconds=app_config['health_check']['interval'])
     sched.start()
 
 app = connexion.FlaskApp(__name__, specification_dir='')
