@@ -1,12 +1,16 @@
 import os
 import logging.config
 import yaml
+import json
+import datetime
 import requests
-import threading
-import time
-from flask_cors import CORS
 import connexion
+
+from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import jsonify
+from connexion import NoContent
+
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -28,28 +32,53 @@ logger = logging.getLogger('basicLogger')
 logger.info(f"App Conf File: {APP_CONF_FILE}")
 logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
-service_statuses = {}
+def check_health():
+    """ Periodically checks the health of services and updates their status """
+    logger.info("Starting Health Check")
+    health_stats = get_latest_health_stats()
 
-def getHealth():
-    while True:
-        for service_name, url in app_config['health_check']['services'].items():
-            status = 'down'
-            try:
-                response = requests.get(url, timeout=5)
-                if response.status_code == 200:
-                    status = 'running'
-            except requests.exceptions.RequestException:
-                pass
+    for service_name, url in app_config['health_check']['services'].items():
+        try:
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                health_stats[service_name] = {"status": "running",
+                                              "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+            else:
+                health_stats[service_name] = {"status": "down",
+                                              "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+        except requests.exceptions.RequestException:
+            health_stats[service_name] = {"status": "down",
+                                          "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
-            service_statuses[service_name] = {
-                'status': status,
-                'last_checked': time.strftime('%Y-%m-%d %H:%M:%S')
-            }
+    write_health_stats(health_stats)
+    logger.info("Completed Health Check")
 
-        time.sleep(app_config['health_check']['interval'])
+def get_latest_health_stats():
+    """ Gets the latest health stats object, or initializes it if not present """
+    if os.path.isfile(app_config["health_datastore"]["filename"]):
+        with open(app_config["health_datastore"]["filename"], 'r') as f:
+            return json.load(f)
+
+    return {service: {"status": "unknown", "last_checked": None} for service in app_config['health_check']['services']}
+
+def write_health_stats(stats):
+    """ Writes health stats to a JSON file """
+    with open(app_config["health_datastore"]["filename"], 'w') as f:
+        json.dump(stats, f)
 
 def health():
-    return jsonify(service_statuses)
+    """ Health endpoint reading from the JSON file """
+    if os.path.isfile(app_config["health_datastore"]["filename"]):
+        with open(app_config["health_datastore"]["filename"], 'r') as f:
+            health_stats = json.load(f)
+            return jsonify(health_stats), 200
+
+    return NoContent, 404
+
+def init_scheduler():
+    sched = BackgroundScheduler(daemon=True)
+    sched.add_job(check_health, 'interval', seconds=app_config['health_check']['interval'])
+    sched.start()
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
@@ -61,7 +90,6 @@ app.add_api("SoccerStats.yaml",
             strict_validation=True,
             validate_responses=True)
 
-threading.Thread(target=getHealth, daemon=True).start()
-
 if __name__ == '__main__':
+    init_scheduler()
     app.run(port=8120)

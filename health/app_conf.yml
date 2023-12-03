@@ -5,3 +5,5 @@ health_check:
     Storage: 'acit3855-lab6a.westus.cloudapp.azure.com/storage/health'
     Processing: 'acit3855-lab6a.westus.cloudapp.azure.com/processing/health'
     Audit: 'acit3855-lab6a.westus.cloudapp.azure.com/audit_log/health'
+  health_datastore:
+    filename: health_data.json
