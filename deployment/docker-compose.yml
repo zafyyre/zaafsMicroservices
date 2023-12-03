@@ -155,6 +155,7 @@ services:
       - "processing"
       - "audit_log"
       - "dashboard-ui"
+      - "health"
     # Connects the port 80 of the nginx container to localhost:80 or localhost
     ports:
       - "80:80"

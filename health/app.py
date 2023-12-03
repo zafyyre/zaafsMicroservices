@@ -28,20 +28,24 @@ logger = logging.getLogger('basicLogger')
 logger.info(f"App Conf File: {APP_CONF_FILE}")
 logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
-def check_health():
+def getHealth():
     while True:
         for service_name, url in app_config['health_check']['services'].items():
+            status = 'down'
             try:
                 response = requests.get(url, timeout=5)
                 if response.status_code == 200:
-                    app_config['health_check']['status'][service_name] = 'running'
-                else:
-                    app_config['health_check']['status'][service_name] = 'down'
+                    status = 'running'
             except requests.exceptions.RequestException:
-                app_config['health_check']['status'][service_name] = 'down'
-            app_config['health_check']['status'][service_name]['last_checked'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                pass
+
+            app_config['health_check']['status'][service_name] = {
+                'status': status,
+                'last_checked': time.strftime('%Y-%m-%d %H:%M:%S')
+            }
 
         time.sleep(app_config['health_check']['interval'])
+
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
