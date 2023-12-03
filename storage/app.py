@@ -16,6 +16,7 @@ from pykafka.common import OffsetType
 from threading import Thread
 from sqlalchemy import and_
 from pykafka.exceptions import KafkaException
+from flask import jsonify
 
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
@@ -220,10 +221,12 @@ def process_messages():
         # Commit the new message as being read
         consumer.commit_offsets()
 
+def health():
+    return jsonify({"status": "healthy"}), 200
+
 app = connexion.FlaskApp(__name__, specification_dir='')
 
 app.add_api("SoccerStats.yaml", strict_validation=True, validate_responses=True, base_path="/storage")
-
 
 if __name__ == '__main__':
     logger.info("Connecting to DB. Hostname:{}, Port:{}".format(app_config["datastore"]["hostname"],

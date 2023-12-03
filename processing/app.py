@@ -9,6 +9,7 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from connexion import NoContent
 from flask_cors import CORS
+from flask import jsonify
 
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
@@ -147,6 +148,8 @@ def init_scheduler():
     sched.add_job(populate_stats,'interval',seconds=app_config['scheduler']['period_sec'])
     sched.start()
 
+def health():
+    return jsonify({"status": "healthy"}), 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 

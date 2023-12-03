@@ -12,7 +12,7 @@ import yaml
 from pykafka import KafkaClient
 from flask_cors import CORS
 import connexion
-
+from flask import jsonify
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -97,6 +97,9 @@ def getPlayerStatistics(index):
 
     logger.error(f"Could not find Player statistic at index {index}")
     return { "message": "Not Found"}, 404
+
+def health():
+    return jsonify({"status": "healthy"}), 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 

@@ -161,6 +161,20 @@ services:
     networks:
       - "api.network"
 
+  health:
+    build:
+      context: ../health
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8120"
+    depends_on:
+      - audit_log
+      - processing
+      - receiver
+      - storage
+    networks:
+      - "api.network"
 
 volumes:
   my-db:

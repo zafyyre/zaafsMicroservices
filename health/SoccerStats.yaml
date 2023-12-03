@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  description: This API reads statistics for Soccer
+  version: "1.0.0"
+  title: Statistics API
+  contact:
+    email: zali29@my.bcit.ca
+paths:
+  /health:
+    get:
+      summary: Retrieves the health status of all services
+      operationId: app.getHealth
+      description: Gets the running status of all services
+      responses:
+        '200':
+          description: Successfully returned the status of all services
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatuses'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    ServiceStatuses:
+      type: object
+      properties:
+        Receiver:
+          $ref: '#/components/schemas/ServiceStatus'
+        Storage:
+          $ref: '#/components/schemas/ServiceStatus'
+        Processing:
+          $ref: '#/components/schemas/ServiceStatus'
+        Audit:
+          $ref: '#/components/schemas/ServiceStatus'
+
+    ServiceStatus:
+      type: object
+      required:
+        - status
+        - last_checked
+      properties:
+        status:
+          type: string
+          description: Indicates if the service is running or down
+          example: running
+        last_checked:
+          type: string
+          format: date-time
+          description: The timestamp of the last health check
+          example: '2023-12-01T12:00:00Z'
