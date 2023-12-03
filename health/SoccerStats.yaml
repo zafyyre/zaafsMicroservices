@@ -9,7 +9,7 @@ paths:
   /health:
     get:
       summary: Retrieves the health status of all services
-      operationId: app.getHealth
+      operationId: app.getHealthStats
       description: Gets the running status of all services
       responses:
         '200':

@@ -32,51 +32,69 @@ logger = logging.getLogger('basicLogger')
 logger.info(f"App Conf File: {APP_CONF_FILE}")
 logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
-def getHealth():
+def getHealthStats():
     """ Periodically checks the health of services and updates their status """
     logger.info("Starting Health Check")
 
     if os.path.isfile(app_config["health_datastore"]["filename"]):
         with open(app_config["health_datastore"]["filename"], 'r') as fh:
             health_stats = json.load(fh)
-    else:
-        # Initialize health_stats if the file does not exist
-        health_stats = {service: {"status": "unknown", "last_checked": None}
-                        for service in app_config['health_check']['services'].keys()}
 
-    for service_name, url in app_config['health_check']['services'].items():
+        stats = {}
+        if "audit_log" in health_stats:
+            stats["audit_log"] = health_stats["audit_log"]
+        if "processing" in health_stats:
+            stats["processing"] = health_stats["processing"]
+        if "storage" in health_stats:
+            stats["storage"] = health_stats["storage"]
+        if "receiver" in health_stats:
+            stats["receiver"] = health_stats["receiver"]
+        if "last_updated" in health_stats:
+            stats["last_updated"] = health_stats["last_updated"]
+
+        logger.info("Completed Health Check")
+        logger.debug(health_stats)
+
+        return health_stats, 200
+
+    return NoContent, 404
+
+
+def populate_stats():
+    """ Gets the latest health stats object, or initializes it if not present """
+    logger.info("Start Periodic Processing")
+
+    stats = get_latest_health_stats()
+
+    last_updated = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    if "last_updated" in stats:
+        last_updated = stats["last_updated"]
+        current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # Get new events using the last updated time and the current time
+    for service_name, base_url in app_config["health_check"]["services"].items():
+        # Construct the full URL for each service
+        full_url = f"http://{base_url}/teams?timestamp={last_updated}&end_timestamp={current_timestamp}"
         try:
-            response = requests.get(url, timeout=5)
+            response = requests.get(full_url, timeout=5)
+            # Process the response as needed
+            logger.info(f"Response from {service_name} service: {response.status_code}")
+
             if response.status_code == 200:
-                status = "running"
-            else:
-                status = "down"
-        except requests.exceptions.RequestException:
-            status = "down"
+                stats[service_name] == "running"
 
-        health_stats[service_name] = {
-            "status": status,
-            "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-        }
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request to {service_name} failed: {e}")
 
-    write_health_stats(health_stats)
-    logger.info("Completed Health Check")
+    stats["last_updated"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    write_health_stats(stats)
+
+    logger.info("Done Periodic Processing")
 
 def get_latest_health_stats():
-    """ Gets the latest health stats object, or initializes it if not present """
-    if os.path.isfile(app_config["health_datastore"]["filename"]):
-        with open(app_config["health_datastore"]["filename"], 'r') as f:
-            return json.load(f)
-
-    return {service: {"status": "unknown", "last_checked": None} for service in app_config['health_check']['services']}
-
-def write_health_stats(stats):
-    """ Writes health stats to a JSON file """
-    with open(app_config["health_datastore"]["filename"], 'w') as fh:
-        json.dump(stats, fh)
-
-def health():
     """ Health endpoint reading from the JSON file """
     if os.path.isfile(app_config["health_datastore"]["filename"]):
         with open(app_config["health_datastore"]["filename"], 'r') as f:
@@ -89,9 +107,14 @@ def health():
             "storage": "down",
             "last_updated": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
+def write_health_stats(stats):
+    """ Writes health stats to a JSON file """
+    with open(app_config["health_datastore"]["filename"], 'w') as fh:
+        json.dump(stats, fh)
+
 def init_scheduler():
     sched = BackgroundScheduler(daemon=True)
-    sched.add_job(getHealth, 'interval', seconds=app_config['health_check']['interval'])
+    sched.add_job(populate_stats, 'interval', seconds=app_config['health_check']['interval'])
     sched.start()
 
 app = connexion.FlaskApp(__name__, specification_dir='')
