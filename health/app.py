@@ -84,9 +84,12 @@ def populate_stats():
 
             if response.status_code == 200:
                 stats[service_name] = "Running"
+            else:
+                stats[service_name] = "Down"
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Request to {service_name} failed: {e}")
+            stats[service_name] = "Down"
 
     stats["last_updated"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
