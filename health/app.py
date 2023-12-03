@@ -48,6 +48,8 @@ def getHealth():
 
         time.sleep(app_config['health_check']['interval'])
 
+def health():
+    return jsonify(service_statuses)
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 
@@ -55,8 +57,9 @@ if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
     CORS(app.app)
     app.app.config['CORS_HEADERS'] = 'Content-Type'
 
-def health():
-    return jsonify(service_statuses)
+app.add_api("SoccerStats.yaml",
+            strict_validation=True,
+            validate_responses=True)
 
 threading.Thread(target=getHealth, daemon=True).start()
 
