@@ -76,14 +76,14 @@ def populate_stats():
     # Get new events using the last updated time and the current time
     for service_name, base_url in app_config["health_check"]["services"].items():
         # Construct the full URL for each service
-        full_url = f"http://{base_url}/{service_name}?timestamp={last_updated}&end_timestamp={current_timestamp}"
+        full_url = f"http://{base_url}?timestamp={last_updated}&end_timestamp={current_timestamp}"
         try:
             response = requests.get(full_url, timeout=5)
             # Process the response as needed
             logger.info(f"Response from {service_name} service: {response.status_code}")
 
             if response.status_code == 200:
-                stats[service_name] == "running"
+                stats[service_name] = "Running"
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Request to {service_name} failed: {e}")
@@ -101,10 +101,10 @@ def get_latest_health_stats():
             health_stats = json.load(f)
             return jsonify(health_stats), 200
 
-    return {"audit_log": "down",
-            "processing": "down",
-            "receiver": "down",
-            "storage": "down",
+    return {"audit_log": "Down",
+            "processing": "Down",
+            "receiver": "Down",
+            "storage": "Down",
             "last_updated": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
 def write_health_stats(stats):
