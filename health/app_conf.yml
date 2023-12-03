@@ -1,9 +1,9 @@
 health_check:
   interval: 20
   services:
-    Receiver: 'acit3855-lab6a.westus.cloudapp.azure.com/receiver/health'
-    Storage: 'acit3855-lab6a.westus.cloudapp.azure.com/storage/health'
-    Processing: 'acit3855-lab6a.westus.cloudapp.azure.com/processing/health'
-    Audit: 'acit3855-lab6a.westus.cloudapp.azure.com/audit_log/health'
+    Receiver: 'acit3855-lab6a.westus.cloudapp.azure.com/receiver'
+    Storage: 'acit3855-lab6a.westus.cloudapp.azure.com/storage'
+    Processing: 'acit3855-lab6a.westus.cloudapp.azure.com/processing'
+    Audit: 'acit3855-lab6a.westus.cloudapp.azure.com/audit_log'
 health_datastore:
   filename: health_data.json
