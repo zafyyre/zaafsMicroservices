@@ -83,7 +83,11 @@ def health():
             health_stats = json.load(f)
             return jsonify(health_stats), 200
 
-    return NoContent, 404
+    return {"audit_log": "down",
+            "processing": "down",
+            "receiver": "down",
+            "storage": "down",
+            "last_updated": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
 
 def init_scheduler():
     sched = BackgroundScheduler(daemon=True)
