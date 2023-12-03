@@ -76,7 +76,7 @@ def populate_stats():
     # Get new events using the last updated time and the current time
     for service_name, base_url in app_config["health_check"]["services"].items():
         # Construct the full URL for each service
-        full_url = f"http://{base_url}/teams?timestamp={last_updated}&end_timestamp={current_timestamp}"
+        full_url = f"http://{base_url}/{service_name}?timestamp={last_updated}&end_timestamp={current_timestamp}"
         try:
             response = requests.get(full_url, timeout=5)
             # Process the response as needed
@@ -109,8 +109,9 @@ def get_latest_health_stats():
 
 def write_health_stats(stats):
     """ Writes health stats to a JSON file """
-    with open(app_config["health_datastore"]["filename"], 'w') as fh:
-        json.dump(stats, fh)
+    fh = open(app_config["health_datastore"]["filename"], "w")
+    fh.write(json.dumps(stats))
+    fh.close()
 
 def init_scheduler():
     sched = BackgroundScheduler(daemon=True)
