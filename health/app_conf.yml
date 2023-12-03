@@ -1,5 +1,5 @@
 health_check:
-  interval: 20
+  interval: 5
   services:
     receiver: acit3855-lab6a.westus.cloudapp.azure.com/receiver/health
     storage: acit3855-lab6a.westus.cloudapp.azure.com/storage/health

@@ -133,4 +133,4 @@ app.add_api("SoccerStats.yaml",
 
 if __name__ == '__main__':
     init_scheduler()
-    app.run(port=8120)
+    app.run(port=8120, use_reloader=False)
