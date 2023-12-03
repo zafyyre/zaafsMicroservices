@@ -28,6 +28,8 @@ logger = logging.getLogger('basicLogger')
 logger.info(f"App Conf File: {APP_CONF_FILE}")
 logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 
+service_statuses = {}
+
 def getHealth():
     while True:
         for service_name, url in app_config['health_check']['services'].items():
@@ -39,7 +41,7 @@ def getHealth():
             except requests.exceptions.RequestException:
                 pass
 
-            app_config['health_check']['status'][service_name] = {
+            service_statuses[service_name] = {
                 'status': status,
                 'last_checked': time.strftime('%Y-%m-%d %H:%M:%S')
             }
@@ -54,7 +56,7 @@ if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
     app.app.config['CORS_HEADERS'] = 'Content-Type'
 
 def health():
-    return jsonify(app_config['health_check']['status'])
+    return jsonify(service_statuses)
 
 threading.Thread(target=getHealth, daemon=True).start()
 
