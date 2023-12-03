@@ -56,7 +56,7 @@ if "TARGET_ENV" not in os.environ or os.environ["TARGET_ENV"] != "test":
 def health():
     return jsonify(app_config['health_check']['status'])
 
-threading.Thread(target=check_health, daemon=True).start()
+threading.Thread(target=getHealth, daemon=True).start()
 
 if __name__ == '__main__':
     app.run(port=8120)
