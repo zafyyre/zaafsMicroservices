@@ -6,6 +6,14 @@ info:
   contact:
     email: zali29@my.bcit.ca
 paths:
+  /health:
+    get:
+      summary: Retrieves the health status of all services
+      operationId: app.health
+      description: Gets the running status of all services
+      responses:
+        '200':
+          description: Successfully returned the status of all services
   /teams:
     get:
      summary: retrieves team statistics

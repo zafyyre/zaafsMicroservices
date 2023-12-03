@@ -6,6 +6,23 @@ info:
   contact:
     email: zali29@my.bcit.ca
 paths:
+  /health:
+    get:
+      summary: Retrieves the health status of all services
+      operationId: app.health
+      description: Gets the running status of all services
+      responses:
+        '200':
+          description: Successfully returned the status of all services
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /teams:
     get:
      summary: retrieves team statistics
