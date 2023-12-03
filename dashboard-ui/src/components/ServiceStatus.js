@@ -35,16 +35,16 @@ export default function AppStats() {
                 <table className={"StatsTable"}>
 					<tbody>
 						<tr>
-                        <td colspan="2">Audit: {stats['audit_log']}</td>
+                            <td>Audit: {stats['audit_log']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Processing: {stats['processing']}</td>
+							<td>Processing: {stats['processing']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Receiver: {stats['receiver']}</td>
+							<td>Receiver: {stats['receiver']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Storage: {stats['storage']}</td>
+							<td>Storage: {stats['storage']}</td>
 						</tr>
 					</tbody>
                 </table>
