@@ -35,23 +35,33 @@ logger.info(f"Log Conf File: {LOG_CONF_FILE}")
 def getHealth():
     """ Periodically checks the health of services and updates their status """
     logger.info("Starting Health Check")
-    health_stats = get_latest_health_stats()
+
+    if os.path.isfile(app_config["health_datastore"]["filename"]):
+        with open(app_config["health_datastore"]["filename"], 'r') as fh:
+            health_stats = json.load(fh)
+    else:
+        # Initialize health_stats if the file does not exist
+        health_stats = {service: {"status": "unknown", "last_checked": None}
+                        for service in app_config['health_check']['services'].keys()}
 
     for service_name, url in app_config['health_check']['services'].items():
         try:
             response = requests.get(url, timeout=5)
             if response.status_code == 200:
-                health_stats[service_name] = {"status": "running",
-                                              "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+                status = "running"
             else:
-                health_stats[service_name] = {"status": "down",
-                                              "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+                status = "down"
         except requests.exceptions.RequestException:
-            health_stats[service_name] = {"status": "down",
-                                          "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+            status = "down"
+
+        health_stats[service_name] = {
+            "status": status,
+            "last_checked": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+        }
 
     write_health_stats(health_stats)
     logger.info("Completed Health Check")
+
 
 def get_latest_health_stats():
     """ Gets the latest health stats object, or initializes it if not present """
@@ -63,8 +73,8 @@ def get_latest_health_stats():
 
 def write_health_stats(stats):
     """ Writes health stats to a JSON file """
-    with open(app_config["health_datastore"]["filename"], 'w') as f:
-        json.dump(stats, f)
+    with open(app_config["health_datastore"]["filename"], 'w') as fh:
+        json.dump(stats, fh)
 
 def health():
     """ Health endpoint reading from the JSON file """
