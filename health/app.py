@@ -98,17 +98,17 @@ def populate_stats():
     logger.info("Done Periodic Processing")
 
 def get_latest_health_stats():
-    """ Health endpoint reading from the JSON file """
+    """ Returns the latest health stats object """
     if os.path.isfile(app_config["health_datastore"]["filename"]):
         with open(app_config["health_datastore"]["filename"], 'r') as f:
-            health_stats = json.load(f)
-            return health_stats, 200
+            return json.load(f)
 
     return {"audit_log": "Down",
             "processing": "Down",
             "receiver": "Down",
             "storage": "Down",
             "last_updated": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")}
+
 
 def write_health_stats(stats):
     """ Writes health stats to a JSON file """
