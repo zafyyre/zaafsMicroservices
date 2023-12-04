@@ -11,7 +11,7 @@ import connexion
 from connexion import NoContent
 from pykafka import KafkaClient
 from pykafka.exceptions import KafkaException
-from flask import jsonify
+
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
     print("In Test Environment")
@@ -111,7 +111,7 @@ def playerStatistics(body):
     return NoContent, 201
 
 def health():
-    return jsonify({"status": "healthy"}), 200
+    return "OK", 200
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 

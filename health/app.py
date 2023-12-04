@@ -102,7 +102,7 @@ def get_latest_health_stats():
     if os.path.isfile(app_config["health_datastore"]["filename"]):
         with open(app_config["health_datastore"]["filename"], 'r') as f:
             health_stats = json.load(f)
-            return jsonify(health_stats), 200
+            return health_stats, 200
 
     return {"audit_log": "Down",
             "processing": "Down",
