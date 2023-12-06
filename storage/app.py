@@ -89,6 +89,7 @@ def getTeamStatistics(timestamp, end_timestamp):
 
     session.close()
     logger.info("Query for Team Statistics reading after {} returns {} results".format(timestamp, len(results_list)))
+    logger.info("Zaaf Test Storage")
 
     return results_list, 200
 

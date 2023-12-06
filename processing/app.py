@@ -119,6 +119,7 @@ def populate_stats():
     write_processing_stats(stats)
 
     logger.info("Done Periodic Processing")
+    logger.info("Zaaf Test")
 
 def get_latest_processing_stats():
     """ Gets the latest stats object, or None if there isn't one """
