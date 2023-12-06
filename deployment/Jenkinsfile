@@ -6,6 +6,7 @@ pipeline {
                 sshagent(['lab6a']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no acit3855zaaf@acit3855-lab6a.westus.cloudapp.azure.com '
+                        git pull &&
                         docker pull zafyyre/audit_log:latest &&
                         docker pull zafyyre/processing:latest &&
                         docker pull zafyyre/receiver:latest &&
