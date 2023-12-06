@@ -73,6 +73,7 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 def getTeamStatistics(timestamp, end_timestamp):
 
     results_list = []
+    logger.info("Zaaf Test Storage")
     
     session = DB_SESSION()
     timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%SZ")
@@ -89,7 +90,7 @@ def getTeamStatistics(timestamp, end_timestamp):
 
     session.close()
     logger.info("Query for Team Statistics reading after {} returns {} results".format(timestamp, len(results_list)))
-    logger.info("Zaaf Test Storage")
+
 
     return results_list, 200
 
